@@ -1,0 +1,120 @@
+$ mkdir nodeprojs
+$ cd nodeprojs
+
+=== before, 
+$ sudo apg-get install nodejs npm 
+
+> results in old version of nodejs (0.10.xx)
+
+=== now, update to latest stable version of node using npm per
+
+1. Figure out how to upgrade node to latest version
+----------------------------------------------------
+
+Use n module from npm in order to upgrade node
+
+sudo npm cache clean -f
+sudo npm install -g n
+sudo n stable
+
+To undo:
+
+sudo apt-get install --reinstall nodejs-legacy     # fix /usr/bin/node
+sudo n rm 6.0.0     # replace number with version of Node that was installed
+sudo npm uninstall -g n
+
+Found in David Walsh blog http://davidwalsh.name/upgrade-nodejs
+REFS:
+http://theholmesoffice.com/node-js-fundamentals-how-to-upgrade-the-node-js-version/
+
+2. Upgrade Node to latest version
+-----------------------------------
+
+[iad]
+
+sudo npm cache clean -f
+sudo npm install -g n
+sudo n stable
+
+iqdean@hpdm4:~/u1404/nodeprojs$ tree -L 3 /usr/local/n/
+/usr/local/n/
+└── versions
+    ├── io
+    └── node
+        └── 6.2.2
+
+iqdean@hpdm4:~/u1404/nodeprojs$ which node
+/usr/local/bin/node
+
+--- the following symlink isn't needed cuz the node binary got copied to /usr/local/bin 
+    and that shows up in the PATH before /usr/bin  ---
+
+iqdean@hpdm4:~/u1404/nodeprojs$ echo $PATH
+/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
+
+----- see what versions we got --------
+iqdean@hpdm4:~/u1404/nodeprojs$ node -v
+v6.2.2
+iqdean@hpdm4:~/u1404/nodeprojs$ npm -v
+1.3.10
+
+--- see what the latest LTS version is v4.4.7
+https://nodejs.org/en/
+
+So, lets use v4.4.7 instead:
+-------------------------------------
+To install a SPECIFIC VERSION OF NODE
+-------------------------------------
+t turns out there is -- you can upgrade your local Node.js with NPM:
+
+sudo npm cache clean -f
+sudo npm install -g n
+sudo n stable
+
+The n package represents a Node helper, and running the last command upgrades node 
+to the latest stable version.  Instead of using "stable", you could specify a desired version:
+
+sudo n 0.8.21
+
+---------------------------------------
+
+sudo npm cache clean -f
+sudo npm install -g n
+sudo n 4.4.7
+
+iqdean@hpdm4:~/u1404/nodeprojs$ tree -L 3 /usr/local/n
+/usr/local/n
+└── versions
+    ├── io
+    └── node
+        ├── 4.4.7    <-- installer installs binaries to 4.4.7/bin/node
+        └── 6.2.2
+
+5 directories, 0 files
+
+iqdean@hpdm4:~/u1404/nodeprojs$ ls -al /usr/local/bin/node
+-rwxr-xr-x 1 root root 24888558 Jul  2 13:40 /usr/local/bin/node    <-- but it also copies node 
+                                                                        bin to /usr/local/bin
+iqdean@hpdm4:~/u1404/nodeprojs$ node -v
+v4.4.7
+
+iqdean@hpdm4:~/u1404/nodeprojs$ echo $PATH
+/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
+                \\\\\\\\\\\\\\__ note ___////////
+                                  
+/usr/local/bin is BEFOR /usr/bin in the $PATH
+
+IF YOU WANT TO USE A SPECIFIC VERSION OF NODE, you delete the /usr/local/bin/node binary
+& create a symlink to the version of node you want to use
+
+sudo ln -sf /usr/local/n/versions/node/<VERSION>/bin/node /usr/local/bin/node
+
+--- ok, see what we got now ----
+
+iqdean@hpdm4:~/u1404/nodeprojs$ node -v
+v4.4.7
+iqdean@hpdm4:~/u1404/nodeprojs$ npm -v
+1.3.10
+
+---- END: INSTALL NODE/NPM ON UBU14.04 ------
+

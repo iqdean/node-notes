@@ -1,0 +1,42 @@
+$ mkdir nodeprojs
+$ cd nodeprojs
+
+=== before, 
+$ sudo apg-get install nodejs npm 
+
+> results in old version of nodejs (0.10.xx)
+
+=== now, update to latest stable version of node using npm per
+
+
+
+Use n module from npm in order to upgrade node
+
+sudo npm cache clean -f
+sudo npm install -g n
+sudo n stable
+
+[iad]
+
+iqdean@hpdm4:~/u1404/nodeprojs$ tree -L 3 /usr/local/n/
+/usr/local/n/
+└── versions
+    ├── io
+    └── node
+        └── 6.2.2
+
+[iad]
+
+sudo ln -sf /usr/local/n/versions/node/<VERSION>/bin/node /usr/bin/node 
+
+
+To undo:
+
+sudo apt-get install --reinstall nodejs-legacy     # fix /usr/bin/node
+sudo n rm 6.0.0     # replace number with version of Node that was installed
+sudo npm uninstall -g n
+
+Found in David Walsh blog http://davidwalsh.name/upgrade-nodejs
+
+===
+

@@ -1,0 +1,517 @@
+
+1. node_simple.js
+   example of how to publish /cmd_vel from node app using roslib to a robot running ros + rosbridge-server
+   > this example publishing 1 /cmd_vel msg everytime you run it from the command line
+
+2. setInterval.js
+   example of how to periodically call a function using setInterval() 
+
+3. modify node_simple.js
+   add
+
+   function loop() { publish /cmd_vel }
+
+   setInterval(loop, 1000);  // publish /cmd_vel at 1 Hz
+
+
+4.  install roslib using npm package manager
+
+iqdean@hpdm4:~/u1404/nodeprojs/3-node-roslib-example$ ls -al
+total 13
+drwxrwxrwx 1 root root 4096 Jul  4 21:14 .
+drwxrwxrwx 1 root root 4096 Jul  4 17:29 ..
+-rwxrwxrwx 1 root root 1081 Jul  4 19:29 node-simple.js
+-rwxrwxrwx 1 root root  230 Jul  4 21:11 setinterval.js
+-rwxrwxrwx 1 root root  277 Jul  4 21:11 settimeout.js
+
+4.1 $ npm install roslib    	 <-- see [ REF1 ]
+
+iqdean@hpdm4:~/u1404/nodeprojs/3-node-roslib-example$ ls -al 
+drwxrwxrwx 1 root root    0 Jul  4 21:38 node_modules 	     <-- $ npm install roslib results in node_modles
+-rwxrwxrwx 1 root root 1081 Jul  4 19:29 node-simple.js	     <-- var ROSLIB = require('roslib');
+-rwxrwxrwx 1 root root  230 Jul  4 21:11 setinterval.js
+-rwxrwxrwx 1 root root  277 Jul  4 21:11 settimeout.js
+
+iqdean@hpdm4:~/u1404/nodeprojs/3-node-roslib-example$ tree -L 3
+.
+├── node_modules
+│   └── roslib			<-- node_modules/roslib
+│       ├── CHANGELOG.md
+│       ├── doc
+│       ├── LICENSE
+│       ├── node_modules
+│       ├── package.json	<-- "main": "./src/RosLibNode.js",
+│       ├── README.md
+│       └── src
+│           ├── actionlib
+│           │   ├── ActionClient.js
+│           │   ├── Goal.js
+│           │   ├── index.js
+│           │   └── SimpleActionServer.js
+│           ├── core
+│           │   ├── index.js
+│           │   ├── Message.js
+│           │   ├── Param.js
+│           │   ├── Ros.js
+│           │   ├── Service.js
+│           │   ├── ServiceRequest.js
+│           │   ├── ServiceResponse.js
+│           │   ├── SocketAdapter.js
+│           │   └── Topic.js
+│           ├── math
+│           │   ├── index.js
+│           │   ├── Pose.js
+│           │   ├── Quaternion.js
+│           │   ├── Transform.js
+│           │   └── Vector3.js
+│           ├── mixin.js
+
+│           ├── node
+│           │   ├── RosTCP.js
+│           │   └── TopicStream.js
+
+│           ├── RosLibBrowser.js
+│           ├── RosLib.js
+
+│           ├── RosLibNode.js	<-- RosLibNode.js
+
+│           ├── tf
+│           │   ├── index.js
+│           │   └── TFClient.js
+│           ├── urdf
+│           │   ├── index.js
+│           │   ├── UrdfBox.js
+│           │   ├── UrdfColor.js
+│           │   ├── UrdfCylinder.js
+│           │   ├── UrdfJoint.js
+│           │   ├── UrdfLink.js
+│           │   ├── UrdfMaterial.js
+│           │   ├── UrdfMesh.js
+│           │   ├── UrdfModel.js
+│           │   ├── UrdfSphere.js
+│           │   ├── UrdfTypes.js
+│           │   └── UrdfVisual.js
+│           └── util
+│               ├── decompressPng.js
+│               └── shim
+├── node-simple.js
+├── setinterval.js
+└── settimeout.js
+
+
+----------------------------------- RosLibNode.js
+/**
+ * @fileOverview ROSLIB Node exclusive extensions 
+ */
+var assign = require('object-assign');
+
+module.exports = assign(require('./RosLib'), {
+  Ros: require('./node/RosTCP.js'),
+  Topic: require('./node/TopicStream')
+});
+
+--- OK, assume we got everything we need to run this node-simple.js ----
+
+
+
+
+
+
+=== [REF1] : $ npm install roslib  =====
+  iqdean@hpdm4:~/u1404/nodeprojs/3-node-roslib-example$ npm install roslib
+-
+> utf-8-validate@1.2.1 install /media/8C365D65365D5176/u1404/nodeprojs/3-node-roslib-example/node_modules/roslib/node_modules/ws/node_modules/utf-8-validate
+> node-gyp rebuild
+
+make: Entering directory `/media/8C365D65365D5176/u1404/nodeprojs/3-node-roslib-example/node_modules/roslib/node_modules/ws/node_modules/utf-8-validate/build'
+  CXX(target) Release/obj.target/validation/src/validation.o
+  SOLINK_MODULE(target) Release/obj.target/validation.node
+  COPY Release/validation.node
+make: Leaving directory `/media/8C365D65365D5176/u1404/nodeprojs/3-node-roslib-example/node_modules/roslib/node_modules/ws/node_modules/utf-8-validate/build'
+
+> bufferutil@1.2.1 install /media/8C365D65365D5176/u1404/nodeprojs/3-node-roslib-example/node_modules/roslib/node_modules/ws/node_modules/bufferutil
+> node-gyp rebuild
+
+make: Entering directory `/media/8C365D65365D5176/u1404/nodeprojs/3-node-roslib-example/node_modules/roslib/node_modules/ws/node_modules/bufferutil/build'
+  CXX(target) Release/obj.target/bufferutil/src/bufferutil.o
+  SOLINK_MODULE(target) Release/obj.target/bufferutil.node
+  COPY Release/bufferutil.node
+make: Leaving directory `/media/8C365D65365D5176/u1404/nodeprojs/3-node-roslib-example/node_modules/roslib/node_modules/ws/node_modules/bufferutil/build'
+roslib@0.18.0 node_modules/roslib
+├── eventemitter2@0.4.14
+├── object-assign@4.1.0
+├── xmldom@0.1.22
+├── pngparse@2.0.1
+└── ws@0.8.1 (options@0.0.6, ultron@1.0.2, utf-8-validate@1.2.1, bufferutil@1.2.1)
+
+----- see what we end up with ------
+
+iqdean@hpdm4:~/u1404/nodeprojs/3-node-roslib-example$ tree 
+.
+├── node_modules
+│   └── roslib
+│       ├── CHANGELOG.md
+│       ├── doc
+│       │   ├── ActionClient.html
+│       │   ├── actionlib_ActionClient.js.html
+│       │   ├── actionlib_Goal.js.html
+│       │   ├── actionlib_SimpleActionServer.js.html
+│       │   ├── core_Message.js.html
+│       │   ├── core_Param.js.html
+│       │   ├── core_Ros.js.html
+│       │   ├── core_Service.js.html
+│       │   ├── core_ServiceRequest.js.html
+│       │   ├── core_ServiceResponse.js.html
+│       │   ├── core_SocketAdapter.js.html
+│       │   ├── core_Topic.js.html
+│       │   ├── fonts
+│       │   │   ├── OpenSans-BoldItalic-webfont.eot
+│       │   │   ├── OpenSans-BoldItalic-webfont.svg
+│       │   │   ├── OpenSans-BoldItalic-webfont.woff
+│       │   │   ├── OpenSans-Bold-webfont.eot
+│       │   │   ├── OpenSans-Bold-webfont.svg
+│       │   │   ├── OpenSans-Bold-webfont.woff
+│       │   │   ├── OpenSans-Italic-webfont.eot
+│       │   │   ├── OpenSans-Italic-webfont.svg
+│       │   │   ├── OpenSans-Italic-webfont.woff
+│       │   │   ├── OpenSans-LightItalic-webfont.eot
+│       │   │   ├── OpenSans-LightItalic-webfont.svg
+│       │   │   ├── OpenSans-LightItalic-webfont.woff
+│       │   │   ├── OpenSans-Light-webfont.eot
+│       │   │   ├── OpenSans-Light-webfont.svg
+│       │   │   ├── OpenSans-Light-webfont.woff
+│       │   │   ├── OpenSans-Regular-webfont.eot
+│       │   │   ├── OpenSans-Regular-webfont.svg
+│       │   │   └── OpenSans-Regular-webfont.woff
+│       │   ├── global.html
+│       │   ├── Goal.html
+│       │   ├── index.html
+│       │   ├── math_Pose.js.html
+│       │   ├── math_Quaternion.js.html
+│       │   ├── math_Transform.js.html
+│       │   ├── math_Vector3.js.html
+│       │   ├── Message.html
+│       │   ├── mixin.js.html
+│       │   ├── node_RosTCP.js.html
+│       │   ├── node_TopicStream.js.html
+│       │   ├── Param.html
+│       │   ├── Pose.html
+│       │   ├── Quaternion.html
+│       │   ├── Ros.html
+│       │   ├── RosLib.js.html
+│       │   ├── RosLibNode.js.html
+│       │   ├── scripts
+│       │   │   ├── linenumber.js
+│       │   │   └── prettify
+│       │   │       ├── Apache-License-2.0.txt
+│       │   │       ├── lang-css.js
+│       │   │       └── prettify.js
+│       │   ├── Service.html
+│       │   ├── ServiceRequest.html
+│       │   ├── ServiceResponse.html
+│       │   ├── SimpleActionServer.html
+│       │   ├── styles
+│       │   │   ├── jsdoc-default.css
+│       │   │   ├── prettify-jsdoc.css
+│       │   │   └── prettify-tomorrow.css
+│       │   ├── TFClient.html
+│       │   ├── tf_TFClient.js.html
+│       │   ├── Topic.html
+│       │   ├── Transform.html
+│       │   ├── UrdfBox.html
+│       │   ├── UrdfColor.html
+│       │   ├── UrdfCylinder.html
+│       │   ├── UrdfJoint.html
+│       │   ├── UrdfLink.html
+│       │   ├── UrdfMaterial.html
+│       │   ├── UrdfMesh.html
+│       │   ├── UrdfModel.html
+│       │   ├── UrdfSphere.html
+│       │   ├── urdf_UrdfBox.js.html
+│       │   ├── urdf_UrdfColor.js.html
+│       │   ├── urdf_UrdfCylinder.js.html
+│       │   ├── urdf_UrdfJoint.js.html
+│       │   ├── urdf_UrdfLink.js.html
+│       │   ├── urdf_UrdfMaterial.js.html
+│       │   ├── urdf_UrdfMesh.js.html
+│       │   ├── urdf_UrdfModel.js.html
+│       │   ├── urdf_UrdfSphere.js.html
+│       │   ├── urdf_UrdfVisual.js.html
+│       │   ├── UrdfVisual.html
+│       │   ├── util_decompressPng.js.html
+│       │   ├── util_shim_decompressPng.js.html
+│       │   └── Vector3.html
+│       ├── LICENSE
+│       ├── node_modules
+│       │   ├── eventemitter2
+│       │   │   ├── index.js
+│       │   │   ├── lib
+│       │   │   │   └── eventemitter2.js
+│       │   │   ├── package.json
+│       │   │   └── README.md
+│       │   ├── object-assign
+│       │   │   ├── index.js
+│       │   │   ├── license
+│       │   │   ├── package.json
+│       │   │   └── readme.md
+│       │   ├── pngparse
+│       │   │   ├── data
+│       │   │   │   ├── 1bit.png
+│       │   │   │   ├── accum.png
+│       │   │   │   ├── grayscale.png
+│       │   │   │   ├── indexedalpha.png
+│       │   │   │   ├── indexed.png
+│       │   │   │   ├── paeth.png
+│       │   │   │   ├── truecoloralpha.png
+│       │   │   │   └── truecolor.png
+│       │   │   ├── index.js
+│       │   │   ├── package.json
+│       │   │   ├── README.md
+│       │   │   └── test.js
+│       │   ├── ws
+│       │   │   ├── index.js
+│       │   │   ├── lib
+│       │   │   │   ├── browser.js
+│       │   │   │   ├── BufferPool.js
+│       │   │   │   ├── BufferUtil.fallback.js
+│       │   │   │   ├── BufferUtil.js
+│       │   │   │   ├── ErrorCodes.js
+│       │   │   │   ├── Extensions.js
+│       │   │   │   ├── PerMessageDeflate.js
+│       │   │   │   ├── Receiver.hixie.js
+│       │   │   │   ├── Receiver.js
+│       │   │   │   ├── Sender.hixie.js
+│       │   │   │   ├── Sender.js
+│       │   │   │   ├── Validation.fallback.js
+│       │   │   │   ├── Validation.js
+│       │   │   │   ├── WebSocket.js
+│       │   │   │   └── WebSocketServer.js
+│       │   │   ├── Makefile
+│       │   │   ├── node_modules
+│       │   │   │   ├── bufferutil
+│       │   │   │   │   ├── binding.gyp
+│       │   │   │   │   ├── build
+│       │   │   │   │   │   ├── binding.Makefile
+│       │   │   │   │   │   ├── bufferutil.target.mk
+│       │   │   │   │   │   ├── config.gypi
+│       │   │   │   │   │   ├── Makefile
+│       │   │   │   │   │   └── Release
+│       │   │   │   │   │       ├── bufferutil.node
+│       │   │   │   │   │       └── obj.target
+│       │   │   │   │   │           ├── bufferutil
+│       │   │   │   │   │           │   └── src
+│       │   │   │   │   │           │       └── bufferutil.o
+│       │   │   │   │   │           └── bufferutil.node
+│       │   │   │   │   ├── fallback.js
+│       │   │   │   │   ├── index.js
+│       │   │   │   │   ├── node_modules
+│       │   │   │   │   │   ├── bindings
+│       │   │   │   │   │   │   ├── bindings.js
+│       │   │   │   │   │   │   ├── package.json
+│       │   │   │   │   │   │   └── README.md
+│       │   │   │   │   │   └── nan
+│       │   │   │   │   │       ├── CHANGELOG.md
+│       │   │   │   │   │       ├── doc
+│       │   │   │   │   │       │   ├── asyncworker.md
+│       │   │   │   │   │       │   ├── buffers.md
+│       │   │   │   │   │       │   ├── callback.md
+│       │   │   │   │   │       │   ├── converters.md
+│       │   │   │   │   │       │   ├── errors.md
+│       │   │   │   │   │       │   ├── maybe_types.md
+│       │   │   │   │   │       │   ├── methods.md
+│       │   │   │   │   │       │   ├── new.md
+│       │   │   │   │   │       │   ├── node_misc.md
+│       │   │   │   │   │       │   ├── object_wrappers.md
+│       │   │   │   │   │       │   ├── persistent.md
+│       │   │   │   │   │       │   ├── scopes.md
+│       │   │   │   │   │       │   ├── script.md
+│       │   │   │   │   │       │   ├── string_bytes.md
+│       │   │   │   │   │       │   ├── v8_internals.md
+│       │   │   │   │   │       │   └── v8_misc.md
+│       │   │   │   │   │       ├── include_dirs.js
+│       │   │   │   │   │       ├── LICENSE.md
+│       │   │   │   │   │       ├── nan_callbacks_12_inl.h
+│       │   │   │   │   │       ├── nan_callbacks.h
+│       │   │   │   │   │       ├── nan_callbacks_pre_12_inl.h
+│       │   │   │   │   │       ├── nan_converters_43_inl.h
+│       │   │   │   │   │       ├── nan_converters.h
+│       │   │   │   │   │       ├── nan_converters_pre_43_inl.h
+│       │   │   │   │   │       ├── nan.h
+│       │   │   │   │   │       ├── nan_implementation_12_inl.h
+│       │   │   │   │   │       ├── nan_implementation_pre_12_inl.h
+│       │   │   │   │   │       ├── nan_maybe_43_inl.h
+│       │   │   │   │   │       ├── nan_maybe_pre_43_inl.h
+│       │   │   │   │   │       ├── nan_new.h
+│       │   │   │   │   │       ├── nan_object_wrap.h
+│       │   │   │   │   │       ├── nan_persistent_12_inl.h
+│       │   │   │   │   │       ├── nan_persistent_pre_12_inl.h
+│       │   │   │   │   │       ├── nan_string_bytes.h
+│       │   │   │   │   │       ├── nan_typedarray_contents.h
+│       │   │   │   │   │       ├── nan_weak.h
+│       │   │   │   │   │       ├── package.json
+│       │   │   │   │   │       ├── README.md
+│       │   │   │   │   │       └── tools
+│       │   │   │   │   │           ├── 1to2.js
+│       │   │   │   │   │           ├── package.json
+│       │   │   │   │   │           └── README.md
+│       │   │   │   │   ├── package.json
+│       │   │   │   │   ├── README.md
+│       │   │   │   │   └── src
+│       │   │   │   │       └── bufferutil.cc
+│       │   │   │   ├── options
+│       │   │   │   │   ├── lib
+│       │   │   │   │   │   └── options.js
+│       │   │   │   │   ├── Makefile
+│       │   │   │   │   ├── package.json
+│       │   │   │   │   └── README.md
+│       │   │   │   ├── ultron
+│       │   │   │   │   ├── index.js
+│       │   │   │   │   ├── LICENSE
+│       │   │   │   │   ├── package.json
+│       │   │   │   │   ├── README.md
+│       │   │   │   │   └── test.js
+│       │   │   │   └── utf-8-validate
+│       │   │   │       ├── binding.gyp
+│       │   │   │       ├── build
+│       │   │   │       │   ├── binding.Makefile
+│       │   │   │       │   ├── config.gypi
+│       │   │   │       │   ├── Makefile
+│       │   │   │       │   ├── Release
+│       │   │   │       │   │   ├── obj.target
+│       │   │   │       │   │   │   ├── validation
+│       │   │   │       │   │   │   │   └── src
+│       │   │   │       │   │   │   │       └── validation.o
+│       │   │   │       │   │   │   └── validation.node
+│       │   │   │       │   │   └── validation.node
+│       │   │   │       │   └── validation.target.mk
+│       │   │   │       ├── fallback.js
+│       │   │   │       ├── index.js
+│       │   │   │       ├── node_modules
+│       │   │   │       │   ├── bindings
+│       │   │   │       │   │   ├── bindings.js
+│       │   │   │       │   │   ├── package.json
+│       │   │   │       │   │   └── README.md
+│       │   │   │       │   └── nan
+│       │   │   │       │       ├── CHANGELOG.md
+│       │   │   │       │       ├── doc
+│       │   │   │       │       │   ├── asyncworker.md
+│       │   │   │       │       │   ├── buffers.md
+│       │   │   │       │       │   ├── callback.md
+│       │   │   │       │       │   ├── converters.md
+│       │   │   │       │       │   ├── errors.md
+│       │   │   │       │       │   ├── maybe_types.md
+│       │   │   │       │       │   ├── methods.md
+│       │   │   │       │       │   ├── new.md
+│       │   │   │       │       │   ├── node_misc.md
+│       │   │   │       │       │   ├── object_wrappers.md
+│       │   │   │       │       │   ├── persistent.md
+│       │   │   │       │       │   ├── scopes.md
+│       │   │   │       │       │   ├── script.md
+│       │   │   │       │       │   ├── string_bytes.md
+│       │   │   │       │       │   ├── v8_internals.md
+│       │   │   │       │       │   └── v8_misc.md
+│       │   │   │       │       ├── include_dirs.js
+│       │   │   │       │       ├── LICENSE.md
+│       │   │   │       │       ├── nan_callbacks_12_inl.h
+│       │   │   │       │       ├── nan_callbacks.h
+│       │   │   │       │       ├── nan_callbacks_pre_12_inl.h
+│       │   │   │       │       ├── nan_converters_43_inl.h
+│       │   │   │       │       ├── nan_converters.h
+│       │   │   │       │       ├── nan_converters_pre_43_inl.h
+│       │   │   │       │       ├── nan.h
+│       │   │   │       │       ├── nan_implementation_12_inl.h
+│       │   │   │       │       ├── nan_implementation_pre_12_inl.h
+│       │   │   │       │       ├── nan_maybe_43_inl.h
+│       │   │   │       │       ├── nan_maybe_pre_43_inl.h
+│       │   │   │       │       ├── nan_new.h
+│       │   │   │       │       ├── nan_object_wrap.h
+│       │   │   │       │       ├── nan_persistent_12_inl.h
+│       │   │   │       │       ├── nan_persistent_pre_12_inl.h
+│       │   │   │       │       ├── nan_string_bytes.h
+│       │   │   │       │       ├── nan_typedarray_contents.h
+│       │   │   │       │       ├── nan_weak.h
+│       │   │   │       │       ├── package.json
+│       │   │   │       │       ├── README.md
+│       │   │   │       │       └── tools
+│       │   │   │       │           ├── 1to2.js
+│       │   │   │       │           ├── package.json
+│       │   │   │       │           └── README.md
+│       │   │   │       ├── package.json
+│       │   │   │       ├── README.md
+│       │   │   │       └── src
+│       │   │   │           └── validation.cc
+│       │   │   ├── package.json
+│       │   │   └── README.md
+│       │   └── xmldom
+│       │       ├── changelog
+│       │       ├── component.json
+│       │       ├── dom.js
+│       │       ├── dom-parser.js
+│       │       ├── LICENSE
+│       │       ├── __package__.js
+│       │       ├── package.json
+│       │       ├── readme.md
+│       │       └── sax.js
+│       ├── package.json
+│       ├── README.md
+│       └── src
+│           ├── actionlib
+│           │   ├── ActionClient.js
+│           │   ├── Goal.js
+│           │   ├── index.js
+│           │   └── SimpleActionServer.js
+│           ├── core
+│           │   ├── index.js
+│           │   ├── Message.js
+│           │   ├── Param.js
+│           │   ├── Ros.js
+│           │   ├── Service.js
+│           │   ├── ServiceRequest.js
+│           │   ├── ServiceResponse.js
+│           │   ├── SocketAdapter.js
+│           │   └── Topic.js
+│           ├── math
+│           │   ├── index.js
+│           │   ├── Pose.js
+│           │   ├── Quaternion.js
+│           │   ├── Transform.js
+│           │   └── Vector3.js
+│           ├── mixin.js
+│           ├── node
+│           │   ├── RosTCP.js
+│           │   └── TopicStream.js
+│           ├── RosLibBrowser.js
+│           ├── RosLib.js
+│           ├── RosLibNode.js
+│           ├── tf
+│           │   ├── index.js
+│           │   └── TFClient.js
+│           ├── urdf
+│           │   ├── index.js
+│           │   ├── UrdfBox.js
+│           │   ├── UrdfColor.js
+│           │   ├── UrdfCylinder.js
+│           │   ├── UrdfJoint.js
+│           │   ├── UrdfLink.js
+│           │   ├── UrdfMaterial.js
+│           │   ├── UrdfMesh.js
+│           │   ├── UrdfModel.js
+│           │   ├── UrdfSphere.js
+│           │   ├── UrdfTypes.js
+│           │   └── UrdfVisual.js
+│           └── util
+│               ├── decompressPng.js
+│               └── shim
+│                   ├── canvas.js
+│                   ├── decompressPng.js
+│                   ├── EventEmitter2.js
+│                   ├── WebSocket.js
+│                   └── xmldom.js
+├── node-simple.js
+├── setinterval.js
+└── settimeout.js
+
+53 directories, 309 files
+
+---- that's a whole lot of js ----
+
