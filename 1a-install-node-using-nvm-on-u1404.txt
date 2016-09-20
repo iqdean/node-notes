@@ -1,0 +1,106 @@
+Mon Sep 19 20:52:49 PDT 2016
+
+We r gonna use acer c720 onboard edbot cuz it has usb3 i/f rqd for Intel Realsense 3d depth camera
+
+so far all the dev/test of using nodejs to i/f to xbox360 game controller as joystick controller 
+for robot teleops has been done on the hpdm4 notebook... need to get nodejs/npm/xbox360 joystick
+working on ac720 to test odometery using joystick-based /cmd_vel (so far, i've been using ros rqt
+robot tools > robot steering pluging, which is ok, but has seperate GUI controls for linear &
+angular vel which makes it kindda hard to manuever in RVIZ.
+
+Summary - install latest ver of LTS node & npm on ac720 u1404
+-------
+1.1 install nvm script:
+wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.32.0/install.sh | bash
+
+2. find latest LTS version of node from https://nodejs.org/en/     v4.5.0
+
+3. install v4.5.0 using nvm
+
+iqdean@iqdean-Peppy:~$ nvm install 4.5
+
+iqdean@iqdean-Peppy:~$ which node
+/home/iqdean/.nvm/versions/node/v4.5.0/bin/node
+iqdean@iqdean-Peppy:~$ node -v
+v4.5.0
+
+iqdean@iqdean-Peppy:~$ which npm
+/home/iqdean/.nvm/versions/node/v4.5.0/bin/npm
+iqdean@iqdean-Peppy:~$ npm -version
+2.15.9
+
+-----------------------------------------------------------------------------------
+
+1. Install node/npm using nvm 
+
+REF: https://davidwalsh.name/nvm
+
+1.1 install nvm script:
+wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.32.0/install.sh | bash
+---
+iqdean@iqdean-Peppy:~$ wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.32.0/install.sh | bash=> Downloading nvm from git to '/home/iqdean/.nvm'
+=> Cloning into '/home/iqdean/.nvm'...
+remote: Counting objects: 5453, done.
+remote: Compressing objects: 100% (37/37), done.
+remote: Total 5453 (delta 15), reused 0 (delta 0), pack-reused 5415
+Receiving objects: 100% (5453/5453), 1.55 MiB | 2.24 MiB/s, done.
+Resolving deltas: 100% (3288/3288), done.
+Checking connectivity... done.
+* (detached from v0.32.0)
+  master
+
+=> Appending source string to /home/iqdean/.bashrc
+=> Close and reopen your terminal to start using nvm or run the following to use it now:
+
+export NVM_DIR="/home/iqdean/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+---
+
+1.1.2 verify install
+- close/reopen terminal to source .bashrc updates
+
+iqdean@iqdean-Peppy:~$ command -v nvm
+nvm
+
+2. find latest LTS version of node from https://nodejs.org/en/     v4.5.0
+
+3. install v4.5.0 using nvm
+
+iqdean@iqdean-Peppy:~$ nvm install 4.5
+---
+--2016-09-19 21:17:58--  https://nodejs.org/dist/v4.5.0/node-v4.5.0-linux-x64.tar.xz
+Resolving nodejs.org (nodejs.org)... 2400:cb00:2048:1::6814:162e, 2400:cb00:2048:1::6814:172e, 104.20.23.46, ...
+Connecting to nodejs.org (nodejs.org)|2400:cb00:2048:1::6814:162e|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 8320540 (7.9M) [application/x-xz]
+Saving to: ‘/home/iqdean/.nvm/.cache/bin/node-v4.5.0-linux-x64/node-v4.5.0-linux-x64.tar.xz’
+
+100%[=====================================================================>] 8,320,540   7.57MB/s   in 1.0s   
+
+2016-09-19 21:17:59 (7.57 MB/s) - ‘/home/iqdean/.nvm/.cache/bin/node-v4.5.0-linux-x64/node-v4.5.0-linux-x64.tar.xz’ saved [8320540/8320540]
+
+Computing checksum with sha256sum
+Checksums matched!
+Now using node v4.5.0 (npm v2.15.9)
+Creating default alias: default -> 4.5 (-> v4.5.0)
+---
+
+    ==================
+=== verify we got node ====
+    ==================
+
+iqdean@iqdean-Peppy:~$ which node
+/home/iqdean/.nvm/versions/node/v4.5.0/bin/node
+iqdean@iqdean-Peppy:~$ node -v
+v4.5.0
+
+    =================================
+=== when you install node you get npm  ===
+    =================================
+iqdean@iqdean-Peppy:~$ which npm
+/home/iqdean/.nvm/versions/node/v4.5.0/bin/npm
+iqdean@iqdean-Peppy:~$ npm -version
+2.15.9
+
+
+
